@@ -17,15 +17,15 @@ parser.add_argument("-f", "--file", help="Specify a file not in the current work
 args = parser.parse_args()
 
 cwd = os.getcwd()
-#file_path_firewall_security_policy_import_files = cwd + '/firewall_rules_import/'
 
 list_firewall_security_policy_files = []
 list_df_firewall_policies_original = []
 list_df_firewalls_policies_filtered = []
 
+dict_arguments_for_df_loc = {}
+
 def function_csv_to_df():
     global df_firewall_policies_original
-    #for filename in os.listdir(file_path_firewall_security_policy_import_files):
     if args.arg_file is None:
         for filename in os.listdir(cwd):
             if filename.endswith(".csv"):
@@ -50,36 +50,50 @@ def function_transform_args_to_vars():
         arg_src_zone_join = None
     elif args.arg_src_zone is not None:
         arg_src_zone_join = '|'.join(args.arg_src_zone)
+        df_loc_src_zone = '(df_firewall_policies_original["Source Zone"].str.contains(str(' + '\'' + arg_src_zone_join + '\'' + '), case=False, na=False))'
+        dict_arguments_for_df_loc[arg_src_zone_join] = df_loc_src_zone
     #Destination Zone
     if args.arg_dst_zone is None:
         arg_dst_zone_join = None
     elif args.arg_dst_zone is not None:
         arg_dst_zone_join = '|'.join(args.arg_dst_zone)
+        df_loc_dst_zone = '(df_firewall_policies_original["Destination Zone"].str.contains(str('+ '\'' + arg_dst_zone_join + '\'' + '), case=False, na=False))'
+        dict_arguments_for_df_loc[arg_dst_zone_join] = df_loc_dst_zone
     #src_ip
     if args.arg_src_ip is None:
         arg_src_ip_join = None
     elif args.arg_src_ip is not None:
         arg_src_ip_join = '|'.join(args.arg_src_ip)
+        df_loc_src_ip = 'df_firewall_policies_original["Source Address"].str.contains(str(' + '\'' + arg_src_ip_join + '\'' + '), case=False, na=False)'
+        dict_arguments_for_df_loc[arg_src_ip_join] = df_loc_src_ip
     #dst_ip
     if args.arg_dst_ip is None:
         arg_dst_ip_join = None
     elif args.arg_dst_ip is not None:
         arg_dst_ip_join = '|'.join(args.arg_dst_ip)
+        df_loc_dst_ip = 'df_firewall_policies_original["Destination Address"].str.contains(str(' + '\'' + arg_dst_ip_join + '\'' + '), case=False, na=False)'
+        dict_arguments_for_df_loc[arg_dst_ip_join] = df_loc_dst_ip
     #Tags
     if args.arg_tags is None:
         arg_tags_join = None
     elif args.arg_tags is not None:
         arg_tags_join = '|'.join(args.arg_tags)
+        df_loc_tags = 'df_firewall_policies_original["Tags"].str.contains(str(' + '\'' + arg_tags_join + '\'' + '), case=False, na=False)'
+        dict_arguments_for_df_loc[arg_tags_join] = df_loc_tags
     #group
     if args.arg_group is None:
         arg_group_join = None
     elif args.arg_group is not None:
         arg_group_join = '|'.join(args.arg_group)
+        df_loc_group = 'df_firewall_policies_original["Group"].str.contains(str(' + '\'' + arg_group_join + '\'' + '), case=False, na=False)'
+        dict_arguments_for_df_loc[arg_group_join] = df_loc_group
     #policy_name
     if args.arg_policy_name is None:
         arg_policy_name_join = None
     elif args.arg_policy_name is not None:
         arg_policy_name_join = '|'.join(args.arg_policy_name)
+        df_loc_policy_name = 'df_firewall_policies_original["Name"].str.contains(str(' + '\'' + arg_policy_name_join + '\'' + '), case=False, na=False)'
+        dict_arguments_for_df_loc[arg_policy_name_join] = df_loc_policy_name
 
 def function_transform_df_filter_src_zone_args():
     df_firewall_policies_src_zone_str_contains = df_firewall_policies_original.loc[df_firewall_policies_original["Source Zone"].str.contains(str(arg_src_zone_join), case=False, na=False)]
@@ -90,13 +104,12 @@ def function_transform_df_filter_dst_zone_args():
     list_df_firewalls_policies_filtered.append(df_firewall_policies_dst_zone_str_contains)
 
 def function_transform_df_filter_by_args():
-    df_loc_src_zone = 'df_firewall_policies_original["Source Zone"].str.contains(str(arg_src_zone_join), case=False, na=False)'
-    df_loc_dst_zone = 'df_firewall_policies_original["Destination Zone"].str.contains(str(arg_dst_zone_join), case=False, na=False)'
-    df_loc_src_ip = 'df_firewall_policies_original["Source Address"].str.contains(str(arg_src_ip_join), case=False, na=False)'
-    df_loc_dst_ip = 'df_firewall_policies_original["Destination Address"].str.contains(str(arg_dst_ip_join), case=False, na=False)'
-    df_loc_tags = 'df_firewall_policies_original["Tags"].str.contains(str(arg_tags_join), case=False, na=False)'
-    df_loc_group = 'df_firewall_policies_original["Group"].str.contains(str(arg_group_join), case=False, na=False)'
-    df_loc_policy_name = 'df_firewall_policies_original["Name"].str.contains(str(arg_policy_name_join), case=False, na=False)'
+    #list_df_pandas_loc_args = list(dict_arguments_for_df_loc.values())
+    #df_pandas_loc_args_join = (' & '.join(list_df_pandas_loc_args))
+    #for i in list_df_pandas_loc_args:
+        #print(i)
+    #df_firewall_policies_filtered_by_args = df_firewall_policies_original.loc[df_pandas_loc_args_join]
+
 
     df_firewall_policies_filtered_by_args = df_firewall_policies_original.loc[ \
         df_firewall_policies_original["Source Zone"].str.contains(str(arg_src_zone_join), case=False, na=False) & \
