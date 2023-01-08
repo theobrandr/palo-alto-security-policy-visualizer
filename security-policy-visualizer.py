@@ -5,7 +5,7 @@ import pandas as pd
 from pyvis.network import Network
 import networkx as nx
 
-parser = argparse.ArgumentParser(description='Palo Alto Firewall Policy Visualizer')
+parser = argparse.ArgumentParser(description='Palo Alto Firewall Security Policy Visualizer')
 parser.add_argument("-sz", "--src_zone", help="Filter Visualization by Source Zone", dest='arg_src_zone', action='store', nargs='+')
 parser.add_argument("-dz", "--dst_zone", help="Filter Visualization by Destination Zone", dest='arg_dst_zone', action='store', nargs='+')
 parser.add_argument("-sip", "--src_ip", help="Filter Visualization by Source IP", dest='arg_src_ip', action='store', nargs='+')
