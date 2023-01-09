@@ -1,5 +1,5 @@
 # palo-alto-security-policy-visualizer
-A visualizer for Palo Alto Security Policies
+A visualizer for Palo Alto Firewall Security Policies
 
 **Requirements**
 - A CSV export of Security Policies from Palo Alto Firewalls
