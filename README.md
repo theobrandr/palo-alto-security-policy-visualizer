@@ -27,7 +27,7 @@ the -f argument.
 
 **Visualizer Usage**
 - python sp-visualizer.py -f /home/user/Downloads/export_policies_security_rulebase_post-rules_01082023_130023edt.csv
-- - python sp-visualizer.py -dz untrust
+- python sp-visualizer.py -dz untrust
 - python sp-visualizer.py -sz trust -dz untrust
 - python sp-visualizer.py -sz trust -dz untrust -t critical-asset -n ssh
 
